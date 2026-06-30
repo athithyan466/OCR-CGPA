@@ -1,0 +1,293 @@
+
+<title>WISTFUL | GPA & Combined CGPA Calculator</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/chatbot.css') }}">
+
+
+
+</head>
+
+<body>
+<div id="athvik">
+
+    <div id="athvikBubble">
+
+        <span id="athvikText"></span>
+
+    </div>
+
+    <img
+        id="athvikLogo"
+        src="{{ url_for('static', filename='images/athvik-logo.png') }}"
+    >
+
+</div>
+
+
+<div class="header">
+<img src="https://raw.githubusercontent.com/athithyan466/Logo/7794051a3622a003fef683eb88114e26b225c204/v4VdyNJ1_400x400.jpg" class="logo">
+<h1>WISTFUL</h1>
+<div class="brand">GPA & CGPA CALCULATOR</div>
+<div class="tagline">Made for Kavery Engineering Students</div>
+</div>
+
+<div class="container">
+
+<h2>Semester GPA Calculator</h2>
+<section id="ocrSection">
+
+<h2>GPA</h2>
+
+<p>Upload your semester result screenshot.</p>
+
+<input
+    type="file"
+    id="resultImage"
+    accept="image/*">
+
+<br><br>
+
+<button id="extractBtn">
+    Extract Subjects
+</button>
+
+<div id="loading" class="hidden">
+    Reading image...
+</div>
+
+<hr>
+
+<div id="verificationSection" class="hidden">
+
+<h3>Verify Extracted Subjects</h3>
+
+<table id="ocrTable">
+
+<thead>
+
+<tr>
+
+<th>Code</th>
+
+<th>Subject</th>
+
+<th>Credits</th>
+
+<th>Grade</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+</tbody>
+
+</table>
+
+<br>
+
+<button id="calculateOCR">
+Calculate GPA
+</button>
+
+<div id="ocrResult"></div>
+
+</div>
+<div id="ocrResult"></div>
+
+<div id="ocrAnimation" class="hidden">
+
+    <div class="cgpa-circle">
+
+        <svg width="280" height="280">
+
+            <circle
+                class="circle-bg"
+                cx="140"
+                cy="140"
+                r="110">
+            </circle>
+
+            <circle
+                id="ocrProgress"
+                class="circle-progress"
+                cx="140"
+                cy="140"
+                r="110">
+            </circle>
+
+        </svg>
+
+        <div class="cgpa-center">
+
+            <div class="cgpa-title">
+
+                OCR GPA
+
+            </div>
+
+            <div id="ocrAnimatedValue">
+
+                0.000
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<hr>
+
+
+<button id="showManual">
+
+Use Manual Entry Instead
+
+</button>
+<div>
+<select id="regulation" onchange="handleRegulation()">
+<option value="">SELECT REGULATION</option>
+<option value="R2021">R2021</option>
+<option value="R2024">R2024</option>
+</select>
+<select id="dept" onchange="handleDepartment()">
+<option value="">SELECT DEPARTMENT</option>
+<option value="AIDS">AI & DS</option>
+<option value="BME">BIOMEDICAL</option>
+<option value="IT">IMFORMATION TECHNOLOGY</option>
+<option value="AGRI">AGRICULTURE ENGINERRING</option>
+</select>
+
+<select id="sem" onchange="loadSubjects()" disabled>
+<option value="">SELECT SEMESTER</option>
+<option value="1">SEMESTER 1</option>
+<option value="2">SEMESTER 2</option>
+<option value="3">SEMESTER 3</option>
+<option value="4">SEMESTER 4</option>
+<option value="5">SEMESTER 5</option>
+</select>
+
+<button class="secondary" onclick="previousSemester()">Previous</button>
+</div>
+
+<table id="table" class="hidden">
+<tr>
+<th>SEM</th>
+<th>CODE</th>
+<th>SUBJECT</th>
+<th>CREDITS</th>
+<th>GRADE</th>
+</tr>
+</table>
+
+<div class="button-group hidden" id="gpaButtons">
+<button onclick="calculate()">Calculate GPA</button>
+<button onclick="addNewSubject()">Add Subject</button>
+<button class="secondary" onclick="undoLastSubject()">Undo Subject</button>
+<button class="danger" onclick="undoGPA()">Undo GPA</button>
+</div>
+
+<div id="result"></div>
+
+<hr>
+<h2>CGPA Calculator</h2>  
+<button onclick="showCGPASection()">Show Combined CGPA Calculator</button>
+
+<div id="cgpaSection" class="hidden">
+
+<h2>Combined CGPA Calculator</h2>
+
+<div style="margin-bottom:20px;">
+
+<label><b>Select Completed Semesters:</b></label>
+
+<select id="semesterSelect" onchange="generateSemesterInputs()">
+<option value="">SELECT</option>
+<option value="1">1 Semester</option>
+<option value="2">2 Semesters</option>
+<option value="3">3 Semesters</option>
+<option value="4">4 Semesters</option>
+<option value="5">5 Semesters</option>
+<option value="6">6 Semesters</option>
+<option value="7">7 Semesters</option>
+<option value="8">8 Semesters</option>
+</select>
+</div>
+
+<table id="cgpaTable">
+<tr>
+<th>SEMESTER</th>
+<th>GPA</th>
+</tr>
+</table>
+
+<div class="button-group">
+<button onclick="calculateCGPA()">Calculate Combined CGPA</button>
+<button class="danger" onclick="undoCGPA()">Undo CGPA</button>
+</div>
+
+<div id="combinedResult"></div>
+
+
+
+<script>
+
+var table=document.getElementById("table");
+function handleRegulation(){
+  let reg = document.getElementById("regulation").value;
+  let deptSelect = document.getElementById("dept");
+
+  // Reset UI
+  deptSelect.innerHTML = '<option value="">SELECT DEPARTMENT</option>';
+  document.getElementById("sem").value="";
+  document.getElementById("sem").disabled=true;
+
+  resetTable();
+  table.classList.add("hidden");
+  document.getElementById("gpaButtons").classList.add("hidden");
+  document.getElementById("result").innerHTML="";
+
+  // 🔴 Dynamically load only available departments
+  if(subjectsData[reg]){
+    let depts = Object.keys(subjectsData[reg]);
+
+    depts.forEach(d=>{
+      let option = document.createElement("option");
+      option.value = d;
+      option.textContent = (d === "AIDS") ? "AI & DS" :
+                           (d === "BME") ? "BIOMEDICAL" : d;
+      deptSelect.appendChild(option);
+    });
+  }
+}
+</script>
+
+</section>
+
+
+
+<script src="{{ url_for('static', filename='js/data.js') }}"></script>
+
+<script src="{{ url_for('static', filename='js/athvikmessages.js') }}"></script>
+
+<script src="{{ url_for('static', filename='js/athvik.js') }}"></script>
+
+<script src="{{ url_for('static', filename='js/athvikevents.js') }}"></script>
+
+<script src="{{ url_for('static', filename='js/manual.js') }}"></script>
+
+<script src="{{ url_for('static', filename='js/ocrAnimation.js') }}"></script>
+
+<script src="{{ url_for('static', filename='js/ocr.js') }}"></script>
+
+<script src="{{ url_for('static', filename='js/gpaCalculator.js') }}"></script>
+
+<script src="{{ url_for('static', filename='js/cgpaCalculator.js') }}"></script>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+
