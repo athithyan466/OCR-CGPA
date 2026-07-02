@@ -65,11 +65,11 @@ padding:18px 22px;
 
 border-radius:25px;
 
-max-width:260px;
+max-width:320px;
+min-width:220px;
 
-min-width:180px;
-
-font-size:16px;
+font-size:15px;
+font-weight:500;
 
 line-height:1.5;
 
@@ -100,6 +100,13 @@ height:24px;
 background:white;
 
 transform:rotate(45deg);
+color:#222;
+
+word-wrap:break-word;
+
+overflow-wrap:break-word;
+
+white-space:normal;
 
 }
 
@@ -122,5 +129,34 @@ opacity:1;
 transform:translateY(0);
 
 }
+
+}
+@media (max-width:768px){
+
+    #athvik{
+
+        right:12px;
+        bottom:15px;
+
+    }
+
+    #athvikLogo{
+
+        width:60px;
+        height:60px;
+
+    }
+
+    #athvikBubble{
+
+        max-width:220px;
+        min-width:170px;
+
+        right:65px;
+        bottom:5px;
+
+        font-size:14px;
+
+    }
 
 }
