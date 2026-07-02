@@ -30,7 +30,7 @@ def upload_image():
 
         image.save(image_path)
 
-        print("STEP 2")
+        print("STEP 2") 
 
         preprocessor = Preprocessor()
 
@@ -38,9 +38,14 @@ def upload_image():
 
         print("STEP 3")
 
-        reader = Reader(
-            tesseract_cmd=r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-        )
+        import platform
+
+        if platform.system() == "Windows":
+            tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+        else:
+         tesseract_cmd = "tesseract"
+
+        reader = Reader(tesseract_cmd=tesseract_cmd)
 
         print("STEP 4")
 
