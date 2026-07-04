@@ -146,21 +146,19 @@ document.getElementById("calculateOCR").addEventListener("click", function () {
 
     if (totalCredits === 0) {
 
-        document.getElementById("ocrResult").innerHTML = "ALL SUBJECTS FAILED";
-        athvikSay("💀 Every subject failed... that's one way to avoid calculations. Let's hope the next semester treats you better.");
+    athvikSay("💀 Every subject failed... that's one way to avoid calculations. Let's hope the next semester treats you better.");
 
-    } else {
+    playOCRAnimation(0);
 
-        const gpa = totalPoints / totalCredits;
-    
-        athvikResult(gpa);
-        
+} else {
 
-        document.getElementById("ocrResult").innerHTML =
-            "GPA = " + gpa.toFixed(3);
-        playOCRAnimation(gpa);
+    const gpa = totalPoints / totalCredits;
 
-    }
+    athvikResult(gpa);
+
+    playOCRAnimation(gpa);
+
+}
 
 
 });

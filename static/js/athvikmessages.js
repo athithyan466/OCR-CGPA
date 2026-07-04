@@ -12,13 +12,22 @@ const ATHVIK = {
         "Let's make friends before your GPA makes enemies.",
         "You're one upload away from emotional damage.",
         "Relax. I'm here to calculate GPA, not expose your secrets.",
-        "New visitor detected. Coffee level: insufficient."
+        "New visitor detected. Coffee level: insufficient.",
+        "Welcome to WISTFUL.",
+        "Let's calculate your GPA... hopefully it's higher than your Wi-Fi speed.",
+        "First job: upload your semester result."
 
     ],
+    
 
     idle: [
 
         "Still thinking? The upload button won't get jealous if you click it.",
+        "Upload the ORIGINAL result screenshot.",
+        "Crop unnecessary borders before uploading.",
+        "Don't upload WhatsApp screenshots with half the screen missing.",
+        "The cleaner the image, the smarter I look.",
+        "One screenshot. One semester. Don't make me solve a puzzle.",
         "I'm patiently waiting. My patience is artificial, thankfully.",
         "The screenshot isn't going to upload telepathically.",
         "Don't overthink it. Your GPA already did enough of that.",

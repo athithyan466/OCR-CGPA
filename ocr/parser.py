@@ -151,6 +151,7 @@ class GPAParser:
         diagnostics.total_lines = len(lines)
 
         title = self.extract_title(lines)
+        current_semester = self._semester_from_title(title)
 
         subjects: list = []
         unmatched: list = []
@@ -168,19 +169,33 @@ class GPAParser:
 
         subjects = self._dedupe_subjects(subjects)
         subjects = self._resolve_semester_part(subjects, title=title)
+        # Repair semester after all OCR parsing is complete
+        for subject in subjects:
+            if subject.sem != current_semester:
+                subject.sem = current_semester
 
-        total_credits, sgpa = self.calculate_sgpa(subjects)
+        current_subjects = subjects
+        history_subjects = []
+
+        total_credits, sgpa = self.calculate_sgpa(current_subjects)
 
         diagnostics.unmatched_lines = unmatched
         diagnostics.warnings.extend(self._warnings)
         diagnostics.elapsed_ms = (time.perf_counter() - start) * 1000
 
         result = {
-            "exam_title": title,
-            "subjects": [s.to_dict() for s in subjects],
-            "total_credits": total_credits,
-            "sgpa": sgpa,
-        }
+    "exam_title": title,
+    "current_semester": current_semester,
+
+    "subjects": [s.to_dict() for s in current_subjects],
+
+    "history_subjects": [
+        s.to_dict() for s in history_subjects
+    ],
+
+    "total_credits": total_credits,
+    "sgpa": sgpa,
+}
         return result, diagnostics
 
     @staticmethod
@@ -345,7 +360,7 @@ class GPAParser:
 
 
     def _extract_sem_part(self, prefix: str) -> tuple:
-
+       
         prefix = prefix.strip()
         two = self._LEADING_SEM_PART_ISOLATED.match(prefix)
         if two:
@@ -358,10 +373,19 @@ class GPAParser:
             sem = self._clean_sem_token(one.group(1))
             return sem, None, ""
 
-        tail_numbers = re.findall(r"\b\d{1,2}\b", prefix)
+        tail_numbers = re.findall(r"\d{1,2}", prefix)
+
         if tail_numbers:
-            sem = self._clean_sem_token(tail_numbers[-1])
-            return sem, None, prefix
+                sem = self._clean_sem_token(tail_numbers[-2]) if len(tail_numbers) >= 2 else self._clean_sem_token(tail_numbers[-1])
+                part = self._clean_sem_token(tail_numbers[-1]) if len(tail_numbers) >= 2 else None
+
+    # OCR correction for semester column
+    # If the Part column is 3 (common in Anna University)
+    # and the Semester OCR became 7/1/etc., repair it.
+                if part == 3 and sem in (1, 7):
+                     sem = 4
+
+                return sem, part, prefix
 
         return None, None, prefix
 
@@ -370,6 +394,14 @@ class GPAParser:
 
         if token is None:
             return None
+        token = (
+        token.upper()
+         .replace("S", "5")
+         .replace("O", "0")
+         .replace("I", "1")
+         .replace("L", "1")
+)
+
         digits = re.sub(r"[^0-9]", "", token)
         if not digits:
             return None
@@ -425,10 +457,31 @@ class GPAParser:
         name_part = body[: match.start()]
         credit_raw = match.group(0)
         rest = body[match.end():]
-
         credit = self.normalize_numbers(credit_raw)
-        if credit is not None and not (0.0 <= credit <= 6.0):
-            credit = None
+
+        if credit is not None:
+
+            # Common OCR mistakes
+             if credit == 9.0:
+                credit = 3.0
+        elif credit == 8.0:
+                credit = 3.0
+        elif credit == 5.0:
+                credit = 3.0
+        elif credit == 40.0:
+                credit = 4.0
+        elif credit == 30.0:
+                credit = 3.0
+        elif credit == 20.0:
+                credit = 2.0
+        elif credit == 10.0:
+                credit = 1.0
+        elif credit == 15.0:
+                credit = 1.5
+
+            # Reject impossible credits
+        if credit not in (1.0, 1.5, 2.0, 3.0, 4.0):
+                credit = None
 
         name = self._clean_name(name_part)
         return name, credit, rest
