@@ -1,26 +1,26 @@
-
 const extractBtn = document.getElementById("extractBtn");
 
 extractBtn.addEventListener("click", async function () {
+
     athvikImageSelected();
 
     const fileInput = document.getElementById("resultImage");
 
     if (fileInput.files.length === 0) {
 
-    athvikSay(randomMessage(ATHVIK.wrongImage));
+        athvikSay(randomMessage(ATHVIK.wrongImage));
 
-    alert("Please choose an image.");
+        alert("Please choose an image.");
 
-    return;
-
-}
+        return;
+    }
 
     const formData = new FormData();
 
     formData.append("image", fileInput.files[0]);
 
     document.getElementById("loading").classList.remove("hidden");
+
     athvikOCRStarted();
 
     try {
@@ -39,6 +39,7 @@ extractBtn.addEventListener("click", async function () {
         athvikOCRSuccess();
 
     } catch (error) {
+
         athvikOCRFailed();
 
         console.error(error);
@@ -51,6 +52,7 @@ extractBtn.addEventListener("click", async function () {
 
 });
 
+
 function populateOCRTable(subjects) {
 
     const tbody = document.querySelector("#ocrTable tbody");
@@ -62,14 +64,14 @@ function populateOCRTable(subjects) {
         let row = document.createElement("tr");
 
         row.innerHTML = `
-            <td>${subject.code}</td>
+            <td>${subject.subject_code}</td>
 
-            <td>${subject.name}</td>
+            <td>${subject.subject_name}</td>
 
             <td>
                 <input
                     type="number"
-                    value="${subject.credit}"
+                    value="${subject.credits}"
                     class="credit">
             </td>
 
@@ -88,33 +90,37 @@ function populateOCRTable(subjects) {
 
                     <option ${subject.grade=="C"?"selected":""}>C</option>
 
-                    <option ${subject.grade=="U"?"selected":""}>U</option>
+                    <option ${(subject.grade=="U" || subject.grade=="RA")?"selected":""}>U</option>
 
                 </select>
-
             </td>
         `;
-        row.querySelector(".credit").addEventListener("change", function(){
 
-    athvikEdited();
+        row.querySelector(".credit").addEventListener("change", function () {
 
-});
-row.querySelector(".grade").addEventListener("change", function(){
+            athvikEdited();
 
-    athvikEdited();
+        });
 
-});
+        row.querySelector(".grade").addEventListener("change", function () {
+
+            athvikEdited();
+
+        });
 
         tbody.appendChild(row);
 
     });
 
     document.getElementById("verificationSection").classList.remove("hidden");
+
     athvikSay(randomMessage(ATHVIK.verify));
 
 }
 
+
 document.getElementById("calculateOCR").addEventListener("click", function () {
+
     athvikCalculate();
 
     const rows = document.querySelectorAll("#ocrTable tbody tr");
@@ -135,30 +141,33 @@ document.getElementById("calculateOCR").addEventListener("click", function () {
     rows.forEach(row => {
 
         const credit = parseFloat(row.querySelector(".credit").value);
+
         const grade = row.querySelector(".grade").value;
 
         if (grade !== "U") {
+
             totalCredits += credit;
+
             totalPoints += credit * gradeMap[grade];
+
         }
 
     });
 
     if (totalCredits === 0) {
 
-    athvikSay("💀 Every subject failed... that's one way to avoid calculations. Let's hope the next semester treats you better.");
+        athvikSay("💀 Every subject failed... that's one way to avoid calculations. Let's hope the next semester treats you better.");
 
-    playOCRAnimation(0);
+        playOCRAnimation(0);
 
-} else {
+    } else {
 
-    const gpa = totalPoints / totalCredits;
+        const gpa = totalPoints / totalCredits;
 
-    athvikResult(gpa);
+        athvikResult(gpa);
 
-    playOCRAnimation(gpa);
+        playOCRAnimation(gpa);
 
-}
-
+    }
 
 });

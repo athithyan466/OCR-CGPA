@@ -2,8 +2,9 @@ from flask import Flask, render_template, request, jsonify
 import os
 
 from ocr.preprocessing import Preprocessor
-from ocr.reader import Reader
-from ocr.parser import GPAParser
+from ocr.reader import read_marksheet
+from ocr.parser import parse
+
 
 app = Flask(__name__)
 
@@ -30,7 +31,7 @@ def upload_image():
 
         image.save(image_path)
 
-        print("STEP 2") 
+        print("STEP 2")
 
         preprocessor = Preprocessor()
 
@@ -38,27 +39,18 @@ def upload_image():
 
         print("STEP 3")
 
-        import platform
-
-        if platform.system() == "Windows":
-            tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-        else:
-         tesseract_cmd = "tesseract"
-
-        reader = Reader(tesseract_cmd=tesseract_cmd)
-
         print("STEP 4")
 
-        raw_text = reader.read_text(processed)
+        raw_text = read_marksheet(processed)
 
         print("STEP 5")
         print(raw_text)
 
-        parser = GPAParser()
+        
 
         print("STEP 6")
 
-        result = parser.parse(raw_text)
+        result = parse(raw_text)
 
         print("STEP 7")
         print(result)
@@ -70,5 +62,6 @@ def upload_image():
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(debug=True)
