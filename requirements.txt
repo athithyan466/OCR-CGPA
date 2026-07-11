@@ -6,13 +6,5 @@ gunicorn==23.0.0
 opencv-python-headless
 numpy
 Pillow
-<<<<<<< HEAD
-transformers==4.53.2
-accelerate>=1.0.0
-sentencepiece
-safetensors
-huggingface_hub
+
 pytesseract
-=======
-pytesseract
->>>>>>> 5e403df (Updated WISTFUL OCR)
