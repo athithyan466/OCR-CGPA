@@ -64,19 +64,22 @@ function populateOCRTable(subjects) {
         let row = document.createElement("tr");
 
         row.innerHTML = `
-            <td>${subject.subject_code}</td>
+<td>${subject.arrear_sem}</td>
+<td>${subject.code}</td>
+<td>${subject.name}</td>
 
-            <td>${subject.subject_name}</td>
+<td>
+    <input
+        type="number"
+        value="${subject.credit}"
+        class="credit"
+        style="width:80px;">
+</td>
 
             <td>
-                <input
-                    type="number"
-                    value="${subject.credits}"
-                    class="credit">
-            </td>
-
-            <td>
-                <select class="grade">
+                <select
+                    class="grade"
+                    style="width:90px">
 
                     <option ${subject.grade=="O"?"selected":""}>O</option>
 
@@ -94,6 +97,14 @@ function populateOCRTable(subjects) {
 
                 </select>
             </td>
+
+        <td>
+
+            <button
+                class="removeRow"
+                type="button">−</button>
+
+        </td>
         `;
 
         row.querySelector(".credit").addEventListener("change", function () {
@@ -107,6 +118,8 @@ function populateOCRTable(subjects) {
             athvikEdited();
 
         });
+        
+
 
         tbody.appendChild(row);
 

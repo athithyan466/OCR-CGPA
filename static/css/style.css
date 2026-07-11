@@ -483,19 +483,24 @@ button:hover {
 /* ---------- TABLE ---------- */
 
 table {
-
     width: 100%;
-
     border-collapse: collapse;
+    table-layout: fixed;
+}
+#ocrTable th:nth-child(1){
+    width:120px;
+}
 
-    overflow: hidden;
+#ocrTable th:nth-child(2){
+    width:420px;
+}
 
-    border-radius: 14px;
+#ocrTable th:nth-child(3){
+    width:120px;
+}
 
-    margin-top: 25px;
-
-    background: white;
-
+#ocrTable th:nth-child(4){
+    width:130px;
 }
 
 th {

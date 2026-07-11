@@ -8,16 +8,13 @@
 
 <title>WISTFUL | GPA & Combined CGPA Calculator</title>
 
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/chatbot.css') }}">
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 025a8ae (feat: improve OCR parser and GPA extraction)
 </head>
 
 <body>
@@ -79,11 +76,6 @@
             class="nav-btn active"
             onclick="showPage('ocrPage',this)">
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 025a8ae (feat: improve OCR parser and GPA extraction)
 
             OCR GPA
 
@@ -127,8 +119,7 @@
 
                     <br><br>
 
-                    Crop the image so that only the result table
-                    is visible for better OCR accuracy.
+                    <h2>📚 Please Remove Previous Semester Results <br>🎯 Keep Only the Current Semester for Accurate Processing</h2>
 
                 </p>
 
@@ -184,7 +175,7 @@
                             <tr>
 
                                 
-
+                                <th>Sem</th>
                                 <th>subject code</th>
                                 <th>subject name</th>
                                 <th>Credits</th>
@@ -369,6 +360,8 @@
                     <option value="4">SEMESTER 4</option>
 
                     <option value="5">SEMESTER 5</option>
+
+                    <option value="6">SEMESTER 6</option>
 
                 </select>
 
@@ -666,6 +659,8 @@ function handleRegulation(){
 <script src="{{ url_for('static', filename='js/manual.js') }}"></script>
 
 <script src="{{ url_for('static', filename='js/ocrAnimation.js') }}"></script>
+
+<script src="{{ url_for('static', filename='js/manualVerification.js') }}"></script>
 
 <script src="{{ url_for('static', filename='js/ocr.js') }}"></script>
 
