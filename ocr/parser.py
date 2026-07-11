@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import re
 from sys import prefix
-from turtle import left, right
 import unicodedata
 from dataclasses import dataclass
 from typing import Optional
