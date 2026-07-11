@@ -39,7 +39,11 @@ def upload_image():
         print("STEP 3")
 
         reader = Reader(
-            tesseract_cmd=r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+        tesseract_cmd=(
+        r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+        if os.name == "nt"
+        else None
+            )
         )
 
         print("STEP 4")
