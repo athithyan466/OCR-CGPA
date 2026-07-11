@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import re
-from turtle import left, right
+
 
 from sys import prefix
 import unicodedata
